@@ -1,0 +1,16 @@
+name: Test
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Automated test action
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: JSON to DotEnv
+        uses: the-pistol/github-action-read-deployments@master
+
+          

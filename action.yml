@@ -1,0 +1,13 @@
+name: PHP Composer with Cache
+author: Sam Anthony
+
+
+# GITHUB_REPOSITORY
+
+runs:
+  using: "composite"
+  steps:
+    - name: Experiment
+      shell: bash
+      run: |
+        echo "${{ github.repository }}"
