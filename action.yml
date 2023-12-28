@@ -7,7 +7,18 @@ author: Sam Anthony
 runs:
   using: "composite"
   steps:
-    - name: Experiment
-      shell: bash
-      run: |
-        echo "${{ github.repository }}"
+    - uses: octokit/graphql-action@v2.x
+      id: api-request
+      with:
+        query: |
+          query {
+            viewer {
+              name
+            }
+          }
+        owner: ${{ github.event.repository.owner.name }}
+        repo: ${{ github.event.repository.name }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - run: "echo '${{ steps.api-request.outputs.data }}'"
