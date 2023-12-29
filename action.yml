@@ -13,14 +13,14 @@ runs:
       id: api-request
       with:
         query: |
-          query {
-            repository(owner: $owner, name: $repo) {
+          query ($repo_owner: String!, $repo_name: String!) {
+            repository(owner: $repo_owner, name: $repo_name) {
               description
             }
           }
         variables: |
-          owner: "${{ github.event.repository.owner.name }}"
-          repo: "${{ github.event.repository.name }}"
+          repo_owner: "${{ github.event.repository.owner.name }}"
+          repo_name: "${{ github.event.repository.name }}"
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
