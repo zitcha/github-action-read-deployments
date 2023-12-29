@@ -23,4 +23,7 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
-    - run: "echo '${{ steps.api-request.outputs.data }}'"
+    - name: My Name
+      shell: bash
+      run: |
+        echo '${{ steps.api-request.outputs.data }}'
