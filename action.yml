@@ -15,11 +15,12 @@ runs:
         query: |
           query {
             viewer {
-              name
+              name,
+              databaseId
             }
           }
-        owner: ${{ github.event.repository.owner.name }}
-        repo: ${{ github.event.repository.name }}
+#        owner: ${{ github.event.repository.owner.name }}
+#        repo: ${{ github.event.repository.name }}
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
