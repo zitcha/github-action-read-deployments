@@ -13,8 +13,10 @@ runs:
       id: api-request
       with:
         query: |
-          repository(owner: $owner, name: $repo) {
-            description
+          query {
+            repository(owner: $owner, name: $repo) {
+              description
+            }
           }
         owner: ${{ github.event.repository.owner.name }}
         repo: ${{ github.event.repository.name }}
