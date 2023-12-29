@@ -15,9 +15,24 @@ runs:
         query: |
           query ($repo_owner: String!, $repo_name: String!) {
             repository(owner: $repo_owner, name: $repo_name) {
-              description
+              deployments(orderBy: {field: CREATED_AT, direction: DESC}, first: 500, environments: ["test"]) {
+                nodes {
+                  description,
+                  createdAt,
+                  environment,
+                  latestEnvironment,
+                  latestStatus {
+                    description,
+                    state
+                  }
+                  ref {
+                    name,
+                    prefix
+                  }
+                }
             }
           }
+        }
         variables: |
           repo_owner: "${{ github.event.repository.owner.name }}"
           repo_name: "${{ github.event.repository.name }}"

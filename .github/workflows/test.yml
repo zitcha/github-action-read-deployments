@@ -5,6 +5,8 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-latest
+    environment:
+      name: test
     name: Automated test action
     steps:
       - name: Checkout
