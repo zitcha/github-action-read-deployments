@@ -13,14 +13,11 @@ runs:
       id: api-request
       with:
         query: |
-          query {
-            viewer {
-              name,
-              databaseId
-            }
+          repository(owner: $owner, name: $repo) {
+            description
           }
-#        owner: ${{ github.event.repository.owner.name }}
-#        repo: ${{ github.event.repository.name }}
+        owner: ${{ github.event.repository.owner.name }}
+        repo: ${{ github.event.repository.name }}
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
