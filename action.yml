@@ -30,9 +30,9 @@ runs:
                     prefix
                   }
                 }
+              }
             }
           }
-        }
         variables: |
           repo_owner: "${{ github.event.repository.owner.name }}"
           repo_name: "${{ github.event.repository.name }}"
