@@ -12,5 +12,7 @@ jobs:
 
       - name: Test
         uses: the-pistol/github-action-read-deployments@master
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
           

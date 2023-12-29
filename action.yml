@@ -1,8 +1,10 @@
 name: PHP Composer with Cache
 author: Sam Anthony
 
-
-# GITHUB_REPOSITORY
+inputs:
+  GITHUB_TOKEN:
+    description: Pass in the GITHUB_TOKEN
+    required: true
 
 runs:
   using: "composite"
@@ -19,6 +21,6 @@ runs:
         owner: ${{ github.event.repository.owner.name }}
         repo: ${{ github.event.repository.name }}
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
     - run: "echo '${{ steps.api-request.outputs.data }}'"
