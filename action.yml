@@ -51,7 +51,7 @@ runs:
       shell: bash
       run: |
         mkdir ${{ runner.temp }}/dotenv
-        echo '${{ steps.api-request.outputs.data }}' | jq -r '[ .repository.deployments.nodes[] | select(.latestStatus.state == "SUCCESS" ) ] | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}  | to_entries | map("\(.key)=\(.value)") | .[]' > ${{ runner.temp }}/dotenv/.env
+        echo '${{ steps.api-request.outputs.data }}' | jq -r '[ .repository.deployments.nodes[] | select(.latestStatus.state == "SUCCESS" and .ref.prefix == "refs/tags/") ] | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}  | to_entries | map("\(.key)=\(.value)") | .[]' > ${{ runner.temp }}/dotenv/.env
         cat ${{ runner.temp }}/dotenv/.env
 
     - name: Load dotenv file
