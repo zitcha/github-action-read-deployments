@@ -5,6 +5,9 @@ inputs:
   GITHUB_TOKEN:
     description: Pass in the GITHUB_TOKEN
     required: true
+  deployment_environment:
+    description: The GitHub Deployment environment
+    required: true
 
 runs:
   using: "composite"
@@ -13,9 +16,9 @@ runs:
       id: api-request
       with:
         query: |
-          query ($repo_owner: String!, $repo_name: String!) {
+          query ($repo_owner: String!, $repo_name: String!,  $deployment_environment: String!) {
             repository(owner: $repo_owner, name: $repo_name) {
-              deployments(orderBy: {field: CREATED_AT, direction: DESC}, first: 100, environments: ["test"]) {
+              deployments(orderBy: {field: CREATED_AT, direction: DESC}, first: 100, environments: ["$deployment_environment"]) {
                 nodes {
                   description,
                   createdAt,
@@ -36,6 +39,7 @@ runs:
         variables: |
           repo_owner: "${{ github.event.repository.owner.name }}"
           repo_name: "${{ github.event.repository.name }}"
+          deployment_environment: "${{ inputs.deployment_environment }}"
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
