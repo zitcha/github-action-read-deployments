@@ -8,6 +8,10 @@ inputs:
   deployment_environment:
     description: The GitHub Deployment environment
     required: true
+  deployment_status:
+    description: The GitHub Deployment status, e.g FAILURE,
+    required: true
+
 
 runs:
   using: "composite"
@@ -46,6 +50,5 @@ runs:
     - name: My Name
       shell: bash
       run: |
-        echo '${{ steps.api-request.outputs.data }}'
-        echo '${{ steps.api-request.outputs.data }}' | jq '[ .repository.deployments.nodes[] | select(.latestStatus.state == "FAILURE" ) ] | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}'
+        echo '${{ steps.api-request.outputs.data }}' | jq -r '[ .repository.deployments.nodes[] | select(.latestStatus.state == "SUCCESS" ) ] | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}  | to_entries | map("\(.key)=\(.value)") | .[]'
         # TODO - and .ref.prefix == "refs/tags/"
