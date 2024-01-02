@@ -18,7 +18,7 @@ runs:
         query: |
           query ($repo_owner: String!, $repo_name: String!,  $deployment_environment: String!) {
             repository(owner: $repo_owner, name: $repo_name) {
-              deployments(orderBy: {field: CREATED_AT, direction: DESC}, first: 100, environments: ["$deployment_environment"]) {
+              deployments(orderBy: {field: CREATED_AT, direction: DESC}, first: 100, environments: [$deployment_environment]) {
                 nodes {
                   description,
                   createdAt,
