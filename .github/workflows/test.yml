@@ -18,4 +18,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           deployment_environment: test
 
+      - name: Use vars
+        shell: bash
+        run: |
+          echo "deployment_created_at"    
+          echo "${{ env.deployment_created_at }}"    
           
