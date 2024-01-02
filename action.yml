@@ -46,5 +46,6 @@ runs:
     - name: My Name
       shell: bash
       run: |
-        echo '${{ steps.api-request.outputs.data }}' | jq '[ .data.repository.deployments.nodes[] | select(.latestStatus.state == "FAILURE" ) ] | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}'
+        echo '${{ steps.api-request.outputs.data }}'
+        echo '${{ steps.api-request.outputs.data }}' | jq '[ .repository.deployments.nodes[] | select(.latestStatus.state == "FAILURE" ) ] | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}'
         # TODO - and .ref.prefix == "refs/tags/"
