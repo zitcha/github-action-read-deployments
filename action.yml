@@ -47,10 +47,18 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
-    - name: My Name
+    - name: Further filter/parse the GraphQL response
       shell: bash
       run: |
-        echo '${{ steps.api-request.outputs.data }}' | jq -r '[ .repository.deployments.nodes[] | select(.latestStatus.state == "SUCCESS" ) ] | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}  | to_entries | map("\(.key)=\(.value)") | .[]' 
-        pwd
-        ls -la
-        # TODO - and .ref.prefix == "refs/tags/"
+        echo '${{ steps.api-request.outputs.data }}' | jq -r '[ .repository.deployments.nodes[] | select(.latestStatus.state == "SUCCESS" ) ] | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}  | to_entries | map("\(.key)=\(.value)") | .[]' > ${{ runner.temp }}/dotenv/.env
+        cat ${{ runner.temp }}/dotenv/.env
+
+    - name: Load dotenv file
+      uses: xom9ikk/dotenv@v2
+      with:
+        path: ${{ runner.temp }}/dotenv
+
+    - name: Use vars
+      shell: bash
+      run: |
+        echo "${{ env.deployment_created_at }}"
