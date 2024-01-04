@@ -22,12 +22,11 @@ runs:
         query: |
           query {
             viewer {
-                id
-                company
-                email
-                login
-                name                
-              }
+              id
+              company
+              email
+              login
+              name                
             }
           }
       env:
