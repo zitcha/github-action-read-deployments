@@ -17,6 +17,22 @@ runs:
   using: "composite"
   steps:
     - uses: octokit/graphql-action@v2.x
+      id: api-request-viewer
+      with:
+        query: |
+          query {
+            viewer {
+                id
+                company
+                email
+                login
+                name                
+              }
+            }
+          }
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+    - uses: octokit/graphql-action@v2.x
       id: api-request
       with:
         query: |
