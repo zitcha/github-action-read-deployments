@@ -31,6 +31,12 @@ runs:
           }
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+    - name: dump viewer
+      shell: bash
+      run: |
+        echo '${{ steps.api-request-viewer.outputs.data }}'        
+
     - uses: octokit/graphql-action@v2.x
       id: api-request
       with:
