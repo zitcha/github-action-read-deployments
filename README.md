@@ -5,4 +5,3 @@ Custom Github Actions must be in a public repository (Except when using Github E
 ### Github Action - Read Deployments
 
 Read GitHub deployment info via the GitHub API
-
