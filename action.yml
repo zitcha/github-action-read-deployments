@@ -86,3 +86,11 @@ runs:
       shell: bash
       run: |
         echo "${{ env.deployment_created_at }}"
+
+    - name: debug info
+      shell: bash
+      run: |
+        echo "${{ github.repository }}"
+        echo "${{ github.repository_owner }}"
+        echo "${{ github.event.repository.owner.name }}"
+        echo "${{ github.event.repository.name }}"
