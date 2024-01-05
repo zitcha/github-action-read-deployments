@@ -62,9 +62,11 @@ runs:
             }
           }
         variables: |
-          repo_owner: "${{ github.event.repository.owner.name }}"
+          repo_owner: "the-pistol"
           repo_name: "${{ github.event.repository.name }}"
           deployment_environment: "${{ inputs.deployment_environment }}"
+# NOTE: when running a workflow via "on.workflow_dispatch", ${{ github.event.repository.owner.name }} seemed to be empty.
+#       In other situations ${{ github.event.repository.owner.name }} would contain "the-pistol". Hence, Sam decided to just hardcode "the-pistol" above
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
