@@ -62,11 +62,13 @@ runs:
             }
           }
         variables: |
-          repo_owner: "the-pistol"
+          repo_owner: "${{ github.repository_owner }}"
           repo_name: "${{ github.event.repository.name }}"
           deployment_environment: "${{ inputs.deployment_environment }}"
-# NOTE: when running a workflow via "on.workflow_dispatch", ${{ github.event.repository.owner.name }} seemed to be empty.
-#       In other situations ${{ github.event.repository.owner.name }} would contain "the-pistol". Hence, Sam decided to just hardcode "the-pistol" above
+# NOTE: Above, its is not clear if ${{ github.repository_owner }} is the owner of this repository or the owner of the repository which
+# invoked this action. Previously this was using ${{ github.event.repository.owner.name }} however when running a workflow via "on.workflow_dispatch",
+# this value seemed to be empty seemed to be empty. This potential issue might be solved by forcing the "calling" workflow to pass
+# the specific repo owner and repo name
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
