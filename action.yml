@@ -88,7 +88,7 @@ runs:
       run: |
         mkdir ${{ runner.temp }}/dotenv
         cat ${{ runner.temp }}/deployments-3.json | jq -r '. | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}  | to_entries | map("\(.key)=\(.value)") | .[]' > ${{ runner.temp }}/dotenv/.env
-        ${{ runner.temp }}/dotenv/.env
+        cat ${{ runner.temp }}/dotenv/.env
 
     - name: Load dotenv file
       uses: xom9ikk/dotenv@v2
