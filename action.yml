@@ -57,7 +57,7 @@ runs:
     - name: Dump raw API response
       shell: bash
       run: |
-        echo '${{ steps.api-request.outputs.data }}'
+        echo '${{ steps.api-request.outputs.data }}' | jq
 
     # Further refine the results from the API request. Get the most recent successful deployment which was deployed from a tag.
     # Get only the most recent deployment and add a few of its parameters to a .env file (The .env file will be parsed in a later step
