@@ -67,17 +67,6 @@ runs:
         echo "Deployment Node Count:"
         cat ${{ runner.temp }}/deployments-1.json | jq '. | length'
   
-  
-
-#  cat deployments-1.json | jq '[ .[] | select(.latestStatus.state == "SUCCESS") ]' > deployments-2.json
-#
-#  cat deployments-2.json | jq '[ .[] | select(.ref.prefix == "refs/tags/") ]' > deployments-3.json
-#
-#
-#cat deployments-3.json | jq -r '. | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}  | to_entries | map("\(.key)=\(.value)") | .[]'
-
-
-
     - name: select only 'SUCCESS' deployments
       shell: bash
       run: |
@@ -93,9 +82,11 @@ runs:
         echo "Deployment Node Count:"
         cat ${{ runner.temp }}/deployments-3.json | jq '. | length'
 
+    # Because the initial API request had order by CREATED_AT, we can just take the first array element which will be the most recent
     - name: extract JSON to dotenv
       shell: bash
       run: |
+        mkdir ${{ runner.temp }}/dotenv
         cat ${{ runner.temp }}/deployments-3.json | jq -r '. | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}  | to_entries | map("\(.key)=\(.value)") | .[]' > ${{ runner.temp }}/dotenv/.env
         ${{ runner.temp }}/dotenv/.env
 
