@@ -16,28 +16,10 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - uses: octokit/graphql-action@v2.x
-      id: api-request-viewer
-      with:
-        query: |
-          query {
-            viewer {
-              id
-              company
-              email
-              login
-              name                
-            }
-          }
-      env:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
-    - name: dump viewer
-      shell: bash
-      run: |
-        echo '${{ steps.api-request-viewer.outputs.data }}'        
-
-    - uses: octokit/graphql-action@v2.x
+    # Query Github GraphQL API for recent deployment for a specified environment
+    - name: Query Github API for recent deployments
+      uses: octokit/graphql-action@v2.x
       id: api-request
       with:
         query: |
@@ -72,6 +54,13 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
+    - name: Dump raw API response
+      shell: bash
+      run: |
+        echo '${{ steps.api-request.outputs.data }}'
+
+    # Further refine the results from the API request. Get the most recent successful deployment which was deployed from a tag.
+    # Get only the most recent deployment and add a few of its parameters to a .env file (The .env file will be parsed in a later step
     - name: Further filter/parse the GraphQL response
       shell: bash
       run: |
@@ -84,15 +73,10 @@ runs:
       with:
         path: ${{ runner.temp }}/dotenv
 
-    - name: Use vars
+    - name: Vars from latest deployment
       shell: bash
       run: |
+        echo "deployment_created_at"
         echo "${{ env.deployment_created_at }}"
-
-    - name: debug info
-      shell: bash
-      run: |
-        echo "${{ github.repository }}"
-        echo "${{ github.repository_owner }}"
-        echo "${{ github.event.repository.owner.name }}"
-        echo "${{ github.event.repository.name }}"
+        echo "deployment_ref_name"
+        echo "${{ env.deployment_ref_name }}"
