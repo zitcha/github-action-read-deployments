@@ -57,16 +57,47 @@ runs:
     - name: Dump raw API response
       shell: bash
       run: |
-        echo '${{ steps.api-request.outputs.data }}' | jq
+        echo '${{ steps.api-request.outputs.data }}'
 
-    # Further refine the results from the API request. Get the most recent successful deployment which was deployed from a tag.
-    # Get only the most recent deployment and add a few of its parameters to a .env file (The .env file will be parsed in a later step
-    - name: Further filter/parse the GraphQL response
+
+    - name: parse deployment nodes from API response
       shell: bash
       run: |
-        mkdir ${{ runner.temp }}/dotenv
-        echo '${{ steps.api-request.outputs.data }}' | jq -r '[ .repository.deployments.nodes[] | select(.latestStatus.state == "SUCCESS" and .ref.prefix == "refs/tags/") ] | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}  | to_entries | map("\(.key)=\(.value)") | .[]' > ${{ runner.temp }}/dotenv/.env
-        cat ${{ runner.temp }}/dotenv/.env
+        echo '${{ steps.api-request.outputs.data }}' | jq -r '[ .repository.deployments.nodes[] ]' > ${{ runner.temp }}/deployments-1.json
+        echo "Deployment Node Count:"
+        cat ${{ runner.temp }}/deployments-1.json | jq '. | length'
+  
+  
+
+#  cat deployments-1.json | jq '[ .[] | select(.latestStatus.state == "SUCCESS") ]' > deployments-2.json
+#
+#  cat deployments-2.json | jq '[ .[] | select(.ref.prefix == "refs/tags/") ]' > deployments-3.json
+#
+#
+#cat deployments-3.json | jq -r '. | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}  | to_entries | map("\(.key)=\(.value)") | .[]'
+
+
+
+    - name: select only 'SUCCESS' deployments
+      shell: bash
+      run: |
+        cat ${{ runner.temp }}/deployments-1.json | jq '[ .[] | select(.latestStatus.state == "SUCCESS") ]' > ${{ runner.temp }}/deployments-2.json
+        echo "Deployment Node Count:"
+        cat ${{ runner.temp }}/deployments-2.json | jq '. | length'
+
+# TODO-SAM refs/heads/ hacked with refs/tags/
+    - name: select only tag deployments
+      shell: bash
+      run: |
+        cat ${{ runner.temp }}/deployments-2.json | jq '[ .[] | select(.ref.prefix == "refs/heads/") ]' > ${{ runner.temp }}/deployments-3.json
+        echo "Deployment Node Count:"
+        cat ${{ runner.temp }}/deployments-3.json | jq '. | length'
+
+    - name: extract JSON to dotenv
+      shell: bash
+      run: |
+        cat ${{ runner.temp }}/deployments-3.json | jq -r '. | limit(1;.[]) | {deployment_created_at: .createdAt, deployment_ref_name: .ref.name}  | to_entries | map("\(.key)=\(.value)") | .[]' > ${{ runner.temp }}/dotenv/.env
+        ${{ runner.temp }}/dotenv/.env
 
     - name: Load dotenv file
       uses: xom9ikk/dotenv@v2
