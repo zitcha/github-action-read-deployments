@@ -70,11 +70,10 @@ runs:
         echo "Deployment Node Count:"
         cat ${{ runner.temp }}/deployments-2.json | jq '. | length'
 
-# TODO-SAM refs/heads/ hacked with refs/tags/
     - name: select only tag deployments
       shell: bash
       run: |
-        cat ${{ runner.temp }}/deployments-2.json | jq '[ .[] | select(.ref.prefix == "refs/heads/") ]' > ${{ runner.temp }}/deployments-3.json
+        cat ${{ runner.temp }}/deployments-2.json | jq '[ .[] | select(.ref.prefix == "refs/tags/") ]' > ${{ runner.temp }}/deployments-3.json
         echo "Deployment Node Count:"
         cat ${{ runner.temp }}/deployments-3.json | jq '. | length'
 
