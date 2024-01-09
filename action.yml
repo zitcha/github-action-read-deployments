@@ -8,10 +8,6 @@ inputs:
   deployment_environment:
     description: The GitHub Deployment environment
     required: true
-  deployment_status:
-    description: The GitHub Deployment status, e.g FAILURE,
-    required: true
-
 
 runs:
   using: "composite"
